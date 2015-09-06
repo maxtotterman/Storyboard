@@ -23,7 +23,7 @@ public final class UserResource
 	}
 
 	@GET
-	@Path("/users/{firstname}")
+	@Path("/{firstname}")
 	public Response findUser(@PathParam("firstname") String firstName){
 		return Response.ok(service.findUserByFirstname(firstName)).build();
 	}
