@@ -21,10 +21,30 @@ public final class UserResource
 	public Response createUser(User user){
 		return Response.ok(service.createOrUpdate(user)).build();
 	}
-
 	@GET
 	@Path("/{firstname}")
 	public Response findUser(@PathParam("firstname") String firstName){
-		return Response.ok(service.findUserByFirstname(firstName)).build();
+			return Response.ok(service.findUserByFirstname(firstName)).build();
 	}
+
+	@GET
+	@Path("/all")
+	public Response findAllUsers(){
+		return Response.ok(service.findAllUsers()).build();
+	}
+
+	@POST
+	@Path("/{firstname}/update")
+	public Response updateUser(User user){
+		return Response.ok(service.createOrUpdate(user)).build();
+	}
+	@DELETE
+	@Path("/{firstname}")
+	public Response deleteUser(User user){
+		service.deleteUser(user);
+		return Response.accepted().build();
+	}
+
+
+
 }
