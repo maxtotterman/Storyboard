@@ -1,8 +1,12 @@
 package se.kebnekaise.rest.resource;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
+import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 
 import javax.ws.rs.*;
@@ -16,6 +20,9 @@ public final class UserResource
 {
 	@Autowired
 	private UserService service;
+
+	@Autowired
+	private TeamService teamService;
 
 	@POST
 	public Response createUser(User user){
@@ -44,7 +51,14 @@ public final class UserResource
 		service.deleteUser(user);
 		return Response.accepted().build();
 	}
+	@PUT
+	@Path("/{firstname}/team")
+	public Response setTeam(@PathParam("firstname")String name, String teamName){
+		System.out.println(teamName + " SYSTEM OUT");
 
-
-
+		Team team = teamService.getTeambyName();
+		User user = service.findUserByFirstname(name);
+		user.setTeam(team);
+		return Response.ok(service.createOrUpdate(user)).build();
+	}
 }

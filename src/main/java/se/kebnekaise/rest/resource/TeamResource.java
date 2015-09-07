@@ -27,12 +27,16 @@ public class TeamResource {
     public Response updateTeam(Team team){
         return Response.ok(teamService.createOrUpdate(team)).build();
     }
-    
 
     @DELETE
     @Path("/delete")
     public Response deleteTeam(Team team){
         teamService.deleteTeam(team);
         return Response.ok().build();
+    }
+
+    @POST
+    public Response createTeam(Team team){
+        return Response.ok(teamService.createOrUpdate(team)).build();
     }
 }
