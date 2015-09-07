@@ -31,6 +31,7 @@ public final class ItemResource
 	@DELETE
 	@Path("/{workitem}")
 	public Response deleteWorkItem(@PathParam("workitem") Long id){
-		return Response.ok(service.deleteWorkItem(id)).build();
+		service.deleteWorkitem(id);
+		return Response.ok().build();
 	}
 }

@@ -1,7 +1,5 @@
 package se.kebnekaise.rest.resource;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.Team;
@@ -56,7 +54,7 @@ public final class UserResource
 	public Response setTeam(@PathParam("firstname")String name, String teamName){
 		System.out.println(teamName + " SYSTEM OUT");
 
-		Team team = teamService.getTeambyName();
+		Team team = teamService.getTeambyName(teamName);
 		User user = service.findUserByFirstname(name);
 		user.setTeam(team);
 		return Response.ok(service.createOrUpdate(user)).build();
