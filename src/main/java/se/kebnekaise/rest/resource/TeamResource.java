@@ -28,14 +28,17 @@ public class TeamResource {
     }
     @PUT
     @Path("/{teamname}")
-    public Response updateTeam(Team team){
-        return Response.ok(teamService.createOrUpdate(team)).build();
+    public Response updateTeam(@PathParam("teamname")String teamName,Team team){
+        Team teamFromDatabase = teamService.getTeambyName(teamName);
+        teamFromDatabase.setTeamName(team.getTeamName());
+
+        return Response.ok(teamService.createOrUpdate(teamFromDatabase)).build();
     }
 
     @DELETE
     @Path("/delete")
     public Response deleteTeam(Team team){
-        teamService.deleteTeam(team);
+        teamService.deleteTeam(teamService.getTeambyName(team.getTeamName()));
         return Response.ok().build();
     }
 
