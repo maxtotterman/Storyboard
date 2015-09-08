@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.service.UserService;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,13 +14,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Component
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/search")
 public class ApiResource {
 
-    @Autowired
+    @Inject
     private UserService service;
 
     @GET

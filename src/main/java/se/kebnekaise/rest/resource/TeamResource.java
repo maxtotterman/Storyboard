@@ -6,19 +6,19 @@ import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-@Component
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/teams")
 public class TeamResource {
 
-    @Autowired
+    @Inject
     private TeamService teamService;
 
-    @Autowired
+    @Inject
     private UserService userService;
 
     @GET

@@ -7,22 +7,22 @@ import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-@Component
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/users")
 public final class UserResource
 {
-	@Autowired
+	@Inject
 	private UserService service;
 
-	@Autowired
+	@Inject
 	private TeamService teamService;
 
 	@POST
