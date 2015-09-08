@@ -8,7 +8,11 @@ import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.List;
 
 @Component
 @Produces("application/json")
@@ -23,35 +27,56 @@ public final class UserResource
 	private TeamService teamService;
 
 	@POST
-	public Response createUser(User user){
-		return Response.ok(service.createOrUpdate(user)).build();
+	public Response createUser(@Context UriInfo uriInfo, User user) {
+		User result = service.createOrUpdate(user);
+		URI uri = uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build();
+		return Response.created(uri)
+				.entity(result)
+				.build();
 	}
+
 	@GET
-	@Path("/{firstname}")
-	public Response findUser(@PathParam("firstname") String firstName){
-			return Response.ok(service.findUserByFirstname(firstName)).build();
+	public Response findAllUsers() {
+		Iterable result = service.findAllUsers();
+		return Response.ok()
+				.entity(result)
+				.build();
 	}
 
 	@GET
-	@Path("/all")
-	public Response findAllUsers(){
-		return Response.ok(service.findAllUsers()).build();
+	@Path("/{username}")
+	public Response findUser(@PathParam("username") String username) {
+		User user = service.findUserByUsername(username);
+		return Response.ok()
+				.entity(user)
+				.build();
 	}
 
-	@POST
-	@Path("/{firstname}/update")
-	public Response updateUser(User user){
-		return Response.ok(service.createOrUpdate(user)).build();
-	}
 	@DELETE
-	@Path("/{firstname}")
-	public Response deleteUser(User user){
+	@Path("/{username}")
+	public Response deleteUser(@PathParam("username") String username) {
+		/*
+		* Design request:
+		* service returns a User, so that we can return HTTP Code: 200 with the deleted user.
+		* */
+		User user = service.findUserByUsername(username);
 		service.deleteUser(user);
-		return Response.accepted().build();
+		return Response.noContent()
+				.build();
 	}
+
+	@PUT
+	@Path("/{username}")
+	public Response updateUser(User user) {
+		user = service.createOrUpdate(user);
+		return Response.ok()
+				.entity(user)
+				.build();
+	}
+
 	@PUT
 	@Path("/{firstname}/team")
-	public Response setTeam(@PathParam("firstname")String name, String teamName){
+	public Response setTeam(@PathParam("firstname") String name, String teamName) {
 		System.out.println(teamName + " SYSTEM OUT");
 
 		Team team = teamService.getTeambyName(teamName);

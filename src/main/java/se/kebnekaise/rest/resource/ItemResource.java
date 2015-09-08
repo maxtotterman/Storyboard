@@ -22,12 +22,6 @@ public final class ItemResource
 		return Response.ok(service.createOrUpdateWorkItem(work)).build();
 	}
 
-	@PUT
-	@Path("/{workitem}")
-	public Response updateWorkItem(@PathParam("workitem") WorkItem work){
-		return Response.ok(service.createOrUpdateWorkItem(work)).build();
-	}
-
 	@DELETE
 	@Path("/{workitem}")
 	public Response deleteWorkItem(@PathParam("workitem") Long id){

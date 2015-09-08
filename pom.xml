@@ -15,6 +15,20 @@
         <storyboard-version>1.0-SNAPSHOT</storyboard-version>
     </properties>
 
+    <build>
+        <finalName>Storyboard</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -65,25 +79,12 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>se.kebnekaise.java.spring</groupId>
             <artifactId>storyboard</artifactId>
             <version>${storyboard-version}</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <finalName>Storyboard</finalName>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
