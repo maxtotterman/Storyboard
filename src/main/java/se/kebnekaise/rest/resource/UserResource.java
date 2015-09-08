@@ -38,10 +38,15 @@ public final class UserResource
 		return Response.ok(service.findAllUsers()).build();
 	}
 
-	@POST
+	@PUT
 	@Path("/{firstname}/update")
-	public Response updateUser(User user){
-		return Response.ok(service.createOrUpdate(user)).build();
+	public Response updateUser(@PathParam("firstname")String name, User  user){
+		User fromDatabase = service.findUserByFirstname(name);
+		fromDatabase.setFirstname(user.getFirstname());
+		fromDatabase.setSurname(user.getSurname());
+		fromDatabase.setUsername(user.getUsername());
+
+		return Response.ok(service.createOrUpdate(fromDatabase)).build();
 	}
 	@DELETE
 	@Path("/{firstname}")
@@ -51,12 +56,11 @@ public final class UserResource
 	}
 	@PUT
 	@Path("/{firstname}/team")
-	public Response setTeam(@PathParam("firstname")String name, String teamName){
-		System.out.println(teamName + " SYSTEM OUT");
-
-		Team team = teamService.getTeambyName(teamName);
+	public Response setTeam(@PathParam("firstname")String name, Team teamName){
+		Team team = teamService.getTeambyName(teamName.getTeamName());
 		User user = service.findUserByFirstname(name);
 		user.setTeam(team);
 		return Response.ok(service.createOrUpdate(user)).build();
 	}
+
 }
