@@ -24,6 +24,7 @@ public final class UserResource
 
 	@POST
 	public Response createUser(User user){
+
 		return Response.ok(service.createOrUpdate(user)).build();
 	}
 	@GET
