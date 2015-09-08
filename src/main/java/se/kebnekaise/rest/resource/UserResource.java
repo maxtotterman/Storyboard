@@ -46,7 +46,6 @@ public final class UserResource
 	@Path("/{username}")
 	public Response findUser(@PathParam("username") String username) {
 		User user = service.findUserByUsername(username);
-		System.out.println(user);
 		return Response.ok()
 				.entity(user)
 				.build();
