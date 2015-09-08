@@ -1,7 +1,5 @@
 package se.kebnekaise.rest.resource.item;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.WorkItemService;
 
@@ -11,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 
 @Produces("application/json")
 @Consumes("application/json")
@@ -21,7 +20,7 @@ public final class ItemResource
 	private WorkItemService service;
 
 	@POST
-	public Response createWorkItem(@Context UriInfo uriInfo, final WorkItem work){
+	public Response createWorkItem(@Context UriInfo uriInfo, final WorkItem work) {
 		WorkItem result = service.createOrUpdateWorkItem(work);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
 		return Response.created(uri)
@@ -30,12 +29,27 @@ public final class ItemResource
 	}
 
 	@GET
-	@Path("/{item}")
-	public Response getWorkItem(@PathParam("item") Long id) {
-		WorkItem result = service.findById(id);
-		return Response.ok()
-				.entity(result)
-				.build();
+	public Response searchItemByStatus(@Context UriInfo info) {
+		String status = info.getQueryParameters().getFirst("status");
+		String text = info.getQueryParameters().getFirst("text");
+
+		if (status != null) {
+			List<WorkItem> result = service.findByStatus(status);
+			if (!result.isEmpty()) {
+				return Response.ok()
+						.entity(result)
+						.build();
+			}
+		}
+		if (text != null) {
+			List<WorkItem> result = service.findWorkItemContaining(text);
+			if (!result.isEmpty()) {
+				return Response.ok()
+						.entity(result)
+						.build();
+			}
+		}
+		throw new WebApplicationException(404);
 	}
 
 	@DELETE
@@ -47,5 +61,12 @@ public final class ItemResource
 				.build();
 	}
 
-
+	@PUT
+	@Path("/{item}/status")
+	public Response changeStatusForItem(@PathParam("item") Long id, WorkItem status) {
+		WorkItem result = service.updateStatusForWorkItem(id, status.getStatus());
+		return Response.ok()
+				.entity(result)
+				.build();
+	}
 }
