@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.service.TeamService;
+import se.kebnekaise.java.spring.service.UserService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -16,6 +17,9 @@ public class TeamResource {
 
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private UserService userService;
 
     @GET
     @Path("/all")
@@ -38,5 +42,11 @@ public class TeamResource {
     @POST
     public Response createTeam(Team team){
         return Response.ok(teamService.createOrUpdate(team)).build();
+    }
+    @GET
+    @Path("/{teamName}")
+    public Response getUsersFromTeam(@PathParam("teamName")String teamName){
+            Team team = teamService.getTeambyName(teamName);
+            return Response.ok(userService.findUsersByTeam(team)).build();
     }
 }

@@ -12,7 +12,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.List;
 
 @Component
 @Produces("application/json")
@@ -47,6 +46,7 @@ public final class UserResource
 	@Path("/{username}")
 	public Response findUser(@PathParam("username") String username) {
 		User user = service.findUserByUsername(username);
+		System.out.println(user);
 		return Response.ok()
 				.entity(user)
 				.build();
@@ -67,19 +67,19 @@ public final class UserResource
 
 	@PUT
 	@Path("/{username}")
-	public Response updateUser(User user) {
-		user = service.createOrUpdate(user);
-		return Response.ok()
-				.entity(user)
-				.build();
+	public Response updateUser(@PathParam("username")String username, User  user){
+		User fromDatabase = service.findUserByUsername(username);
+		fromDatabase.setFirstname(user.getFirstname());
+		fromDatabase.setSurname(user.getSurname());
+		fromDatabase.setUsername(user.getUsername());
+
+		return Response.ok(service.createOrUpdate(fromDatabase)).build();
 	}
 
 	@PUT
 	@Path("/{firstname}/team")
-	public Response setTeam(@PathParam("firstname") String name, String teamName) {
-		System.out.println(teamName + " SYSTEM OUT");
-
-		Team team = teamService.getTeambyName(teamName);
+	public Response setTeam(@PathParam("firstname")String name, Team teamName){
+		Team team = teamService.getTeambyName(teamName.getTeamName());
 		User user = service.findUserByFirstname(name);
 		user.setTeam(team);
 		return Response.ok(service.createOrUpdate(user)).build();
