@@ -4,7 +4,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @Component
-@ComponentScan(basePackages = {"se.kebnekaise.java.spring" })
+@ComponentScan(basePackages = {
+		"se.kebnekaise.java.spring",
+		"se.kebnekaise.rest"
+})
 public class SpringConfiguration
 {
 }
