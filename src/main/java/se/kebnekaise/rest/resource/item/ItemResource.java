@@ -10,7 +10,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.List;
 
 @Produces("application/json")
@@ -24,13 +23,17 @@ public final class ItemResource
 	@Inject
 	private IssueService issueService;
 
+//	@POST
+//	public Response createWorkItem(@Context UriInfo uriInfo, @RequestBody WorkItem work) {
+//		WorkItem result = service.createOrUpdateWorkItem(work);
+//		URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
+//		return Response.created(uri)
+//				.entity(result)
+//				.build();
+//	}
 	@POST
-	public Response createWorkItem(@Context UriInfo uriInfo, final WorkItem work) {
-		WorkItem result = service.createOrUpdateWorkItem(work);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
-		return Response.created(uri)
-				.entity(result)
-				.build();
+	public Response create(WorkItem work){
+		return Response.ok(service.createOrUpdateWorkItem(work)).build();
 	}
 
 	@GET

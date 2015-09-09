@@ -2,6 +2,7 @@ package se.kebnekaise.rest.resource;
 
 import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
+import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 import se.kebnekaise.java.spring.service.WorkItemService;
@@ -91,5 +92,17 @@ public final class UserResource
 	public Response getAllWorkItems(@PathParam("username")String firstname){
 		User user = service.findUserByUsername(firstname);
 		return Response.ok(workItemService.findByUser(user)).build();
+	}
+	@PUT
+	@Path("/{firstname}/items/{workItem}")
+	public Response setWorkItem(@PathParam("firstname")String firstname,@PathParam("workItem")Long id){
+		WorkItem workItem = workItemService.findById(id);
+		User user = service.findUserByFirstname(firstname);
+		user.addWorkItem(workItem);
+		workItem.addUser(user);
+		workItemService.createOrUpdateWorkItem(workItem);
+		service.updateUser(user.getUsername(),user);
+
+		return Response.ok().build();
 	}
 }

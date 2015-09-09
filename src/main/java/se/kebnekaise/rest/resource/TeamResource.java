@@ -71,7 +71,7 @@ public class TeamResource
     public Response getWorkItemsForTeam(@PathParam("teamName")String teamName){
         Team team = teamService.getTeambyName(teamName);
         List<WorkItem> list = workItemService.findWorkItemByTeam(team);
-        list.forEach(System.out::println);
-        return Response.ok().entity(list).build();
+
+        return Response.ok(workItemService.findWorkItemByTeam(team)).build();
     }
 }
