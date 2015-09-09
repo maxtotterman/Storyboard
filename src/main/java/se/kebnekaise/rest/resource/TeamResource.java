@@ -23,10 +23,7 @@ public class TeamResource
 
 	@Inject
 	private TeamService teamService;
-
-	@Inject
-	private UserService userService;
-
+	
 	@POST
 	public Response createTeam(@Context UriInfo uriInfo, Team team) {
 		Team result = teamService.createTeam(team);
