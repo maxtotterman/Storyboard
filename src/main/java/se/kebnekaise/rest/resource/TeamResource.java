@@ -42,15 +42,6 @@ public class TeamResource
 				.build();
 	}
 
-	@GET
-	@Path("/{teamName}/users")
-	public Response getUsersFromTeam(@PathParam("teamName") String teamName) {
-		List<User> result = teamService.getAllUsersInTeam(teamName);
-		return Response.ok()
-				.entity(result)
-				.build();
-	}
-
 	@PUT
 	@Path("/{teamName}")
 	public Response updateTeam(@PathParam("teamName") String teamName, Team team) {
@@ -83,6 +74,15 @@ public class TeamResource
 		System.out.println(newUser.getTeam());
 		return Response.ok()
 				.entity(newUser)
+				.build();
+	}
+	
+	@GET
+	@Path("/{teamName}/users")
+	public Response getUsersFromTeam(@PathParam("teamName") String teamName) {
+		List<User> result = teamService.getAllUsersInTeam(teamName);
+		return Response.ok()
+				.entity(result)
 				.build();
 	}
 }
