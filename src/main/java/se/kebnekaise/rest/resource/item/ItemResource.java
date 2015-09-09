@@ -1,5 +1,6 @@
 package se.kebnekaise.rest.resource.item;
 
+import se.kebnekaise.java.spring.model.Issue;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.IssueService;
 import se.kebnekaise.java.spring.service.WorkItemService;
@@ -73,10 +74,18 @@ public final class ItemResource
 				.entity(result)
 				.build();
 	}
+
 	@GET
 	@Path("/issues")
 	public Response getItemWithIssue(){
 		return Response.ok(issueService.findAllIssuesWithWorkItem()).build();
 	}
 
+
+	@POST
+	@Path("/{item}/issues")
+	public Response addIssueToItem(@PathParam("item") Long id, Issue issue){
+		service.addIssueToWorkItem(id, issue);
+		return Response.ok().build();
+	}
 }
