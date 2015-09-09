@@ -76,18 +76,17 @@ public final class UserResource
 	}
 
 	@PUT
-	@Path("/{firstname}/team")
-	public Response setTeam(@PathParam("firstname") String name, Team teamName) {
+	@Path("/{username}/team")
+	public Response setTeam(@PathParam("username") String name, Team teamName) {
 		Team team = teamService.getTeambyName(teamName.getTeamName());
-		User user = service.findUserByFirstname(name);
+		User user = service.findUserByUsername(name);
 		user.setTeam(team);
 		return Response.ok(service.updateUser(name, user)).build();
 	}
 	@GET
-	@Path("{firstname}/items")
-	public Response getAllWorkItems(@PathParam("firstname")String firstname){
-		User user = service.findUserByFirstname(firstname);
-		System.out.println("UserResource.getAllWorkItems:" + workItemService.findByUser(user));
+	@Path("{username}/items")
+	public Response getAllWorkItems(@PathParam("username")String firstname){
+		User user = service.findUserByUsername(firstname);
 		return Response.ok(workItemService.findByUser(user)).build();
 	}
 }

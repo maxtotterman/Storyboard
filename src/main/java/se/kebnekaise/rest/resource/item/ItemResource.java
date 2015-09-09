@@ -59,7 +59,7 @@ public final class ItemResource
 
 	@DELETE
 	@Path("/{item}")
-	public Response deleteUser(@PathParam("item") Long id) {
+	public Response deleteItem(@PathParam("item") Long id) {
 		WorkItem result = service.findById(id);
 		service.deleteWorkitem(id);
 		return Response.noContent()
@@ -80,7 +80,6 @@ public final class ItemResource
 	public Response getItemWithIssue(){
 		return Response.ok(issueService.findAllIssuesWithWorkItem()).build();
 	}
-
 
 	@POST
 	@Path("/{item}/issues")
