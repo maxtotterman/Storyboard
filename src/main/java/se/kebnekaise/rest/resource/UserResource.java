@@ -22,9 +22,6 @@ public final class UserResource
 	private UserService service;
 
 	@Inject
-	private TeamService teamService;
-
-	@Inject
 	WorkItemService workItemService;
 
 	@POST
@@ -75,14 +72,6 @@ public final class UserResource
 				.build();
 	}
 
-	@PUT
-	@Path("/{username}/team")
-	public Response setTeam(@PathParam("username") String name, Team teamName) {
-		Team team = teamService.getTeambyName(teamName.getTeamName());
-		User user = service.findUserByUsername(name);
-		user.setTeam(team);
-		return Response.ok(service.updateUser(name, user)).build();
-	}
 	@GET
 	@Path("{username}/items")
 	public Response getAllWorkItems(@PathParam("username")String firstname){

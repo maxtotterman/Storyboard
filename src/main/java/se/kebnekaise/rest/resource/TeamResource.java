@@ -43,7 +43,7 @@ public class TeamResource
 	}
 
 	@GET
-	@Path("/{teamName}")
+	@Path("/{teamName}/users")
 	public Response getUsersFromTeam(@PathParam("teamName") String teamName) {
 		List<User> result = teamService.getAllUsersInTeam(teamName);
 		return Response.ok()
@@ -74,4 +74,15 @@ public class TeamResource
         list.forEach(System.out::println);
         return Response.ok().entity(list).build();
     }
+
+	@POST
+	@Path("/{teamName}/users")
+	public Response addUserToTeam(@PathParam("teamName") String teamname, User user) {
+		System.out.println(user.getTeam());
+		User newUser = teamService.addUserToTeam(teamname, user);
+		System.out.println(newUser.getTeam());
+		return Response.ok()
+				.entity(newUser)
+				.build();
+	}
 }
