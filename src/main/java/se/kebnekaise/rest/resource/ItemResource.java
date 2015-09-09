@@ -1,4 +1,4 @@
-package se.kebnekaise.rest.resource.item;
+package se.kebnekaise.rest.resource;
 
 import se.kebnekaise.java.spring.model.Issue;
 import se.kebnekaise.java.spring.model.WorkItem;
