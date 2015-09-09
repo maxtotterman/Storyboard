@@ -80,7 +80,10 @@ public final class UserResource
 	public Response setTeam(@PathParam("username") String name, Team teamName) {
 		Team team = teamService.getTeambyName(teamName.getTeamName());
 		User user = service.findUserByUsername(name);
+		System.out.println("UserResource.setTeam: " + user.getUsername());
 		user.setTeam(team);
+		team.addUser(user);
+		teamService.updateTeam(team.getTeamName(),team);
 		return Response.ok(service.updateUser(name, user)).build();
 	}
 	@GET
