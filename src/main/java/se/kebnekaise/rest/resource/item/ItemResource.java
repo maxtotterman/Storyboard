@@ -1,6 +1,7 @@
 package se.kebnekaise.rest.resource.item;
 
 import se.kebnekaise.java.spring.model.WorkItem;
+import se.kebnekaise.java.spring.service.IssueService;
 import se.kebnekaise.java.spring.service.WorkItemService;
 
 import javax.inject.Inject;
@@ -18,6 +19,9 @@ public final class ItemResource
 {
 	@Inject
 	private WorkItemService service;
+
+	@Inject
+	private IssueService issueService;
 
 	@POST
 	public Response createWorkItem(@Context UriInfo uriInfo, final WorkItem work) {
@@ -69,4 +73,10 @@ public final class ItemResource
 				.entity(result)
 				.build();
 	}
+	@GET
+	@Path("/issues")
+	public Response getItemWithIssue(){
+		return Response.ok(issueService.findAllIssuesWithWorkItem()).build();
+	}
+
 }

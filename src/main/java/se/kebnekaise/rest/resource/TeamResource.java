@@ -1,14 +1,15 @@
 package se.kebnekaise.rest.resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.Team;
+import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
+import se.kebnekaise.java.spring.service.WorkItemService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Produces("application/json")
 @Consumes("application/json")
@@ -20,6 +21,9 @@ public class TeamResource {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private WorkItemService workItemService;
 
     @GET
     @Path("/all")
@@ -51,5 +55,13 @@ public class TeamResource {
     public Response getUsersFromTeam(@PathParam("teamName")String teamName){
             Team team = teamService.getTeambyName(teamName);
             return Response.ok(userService.findUsersByTeam(team)).build();
+    }
+    @GET
+    @Path("/{teamName}/items")
+    public Response getWorkItemsForTeam(@PathParam("teamName")String teamName){
+        Team team = teamService.getTeambyName(teamName);
+        List<WorkItem> list = workItemService.findWorkItemByTeam(team);
+        list.forEach(System.out::println);
+        return Response.ok().entity(list).build();
     }
 }

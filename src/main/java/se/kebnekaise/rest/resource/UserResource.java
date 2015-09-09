@@ -1,11 +1,10 @@
 package se.kebnekaise.rest.resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
+import se.kebnekaise.java.spring.service.WorkItemService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -24,6 +23,9 @@ public final class UserResource
 
 	@Inject
 	private TeamService teamService;
+
+	@Inject
+	WorkItemService workItemService;
 
 	@POST
 	public Response createUser(@Context UriInfo uriInfo, User user) {
@@ -82,5 +84,12 @@ public final class UserResource
 		User user = service.findUserByFirstname(name);
 		user.setTeam(team);
 		return Response.ok(service.createOrUpdate(user)).build();
+	}
+	@GET
+	@Path("{firstname}/items")
+	public Response getAllWorkItems(@PathParam("firstname")String firstname){
+		User user = service.findUserByFirstname(firstname);
+		System.out.println("UserResource.getAllWorkItems:" + workItemService.findByUser(user));
+		return Response.ok(workItemService.findByUser(user)).build();
 	}
 }
