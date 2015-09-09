@@ -27,7 +27,7 @@ public final class UserResource
 
 	@POST
 	public Response createUser(@Context UriInfo uriInfo, User user) {
-		User result = service.createOrUpdate(user);
+		User result = service.createNewUser(user);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build();
 		return Response.created(uri)
 				.entity(result)
@@ -66,21 +66,19 @@ public final class UserResource
 
 	@PUT
 	@Path("/{username}")
-	public Response updateUser(@PathParam("username")String username, User  user){
-		User fromDatabase = service.findUserByUsername(username);
-		fromDatabase.setFirstname(user.getFirstname());
-		fromDatabase.setSurname(user.getSurname());
-		fromDatabase.setUsername(user.getUsername());
-
-		return Response.ok(service.createOrUpdate(fromDatabase)).build();
+	public Response updateUser(@PathParam("username") String username, User user) {
+		User result = service.updateUser(username, user);
+		return Response.ok()
+				.entity(result)
+				.build();
 	}
 
 	@PUT
 	@Path("/{firstname}/team")
-	public Response setTeam(@PathParam("firstname")String name, Team teamName){
+	public Response setTeam(@PathParam("firstname") String name, Team teamName) {
 		Team team = teamService.getTeambyName(teamName.getTeamName());
 		User user = service.findUserByFirstname(name);
 		user.setTeam(team);
-		return Response.ok(service.createOrUpdate(user)).build();
+		return Response.ok(service.updateUser(name, user)).build();
 	}
 }

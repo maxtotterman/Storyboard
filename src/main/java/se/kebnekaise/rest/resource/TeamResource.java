@@ -3,53 +3,69 @@ package se.kebnekaise.rest.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.Team;
+import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.List;
 
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/teams")
-public class TeamResource {
+public class TeamResource
+{
 
-    @Inject
-    private TeamService teamService;
+	@Inject
+	private TeamService teamService;
 
-    @Inject
-    private UserService userService;
+	@Inject
+	private UserService userService;
 
-    @GET
-    @Path("/all")
-    public Response getAllTeams(){
-        return Response.ok(teamService.getAllTeams()).build();
-    }
-    @PUT
-    @Path("/{teamname}")
-    public Response updateTeam(@PathParam("teamname")String teamName,Team team){
-        Team teamFromDatabase = teamService.getTeambyName(teamName);
-        teamFromDatabase.setTeamName(team.getTeamName());
+	@POST
+	public Response createTeam(@Context UriInfo uriInfo, Team team) {
+		Team result = teamService.createTeam(team);
+		URI uri = uriInfo.getAbsolutePathBuilder().path(team.getTeamName()).build();
+		return Response.created(uri)
+				.entity(result)
+				.build();
+	}
 
-        return Response.ok(teamService.createOrUpdate(teamFromDatabase)).build();
-    }
+	@GET
+	public Response getAllTeams() {
+		Iterable result = teamService.getAllTeams();
+		return Response.ok()
+				.entity(result)
+				.build();
+	}
 
-    @DELETE
-    @Path("/delete")
-    public Response deleteTeam(Team team){
-        teamService.deleteTeam(teamService.getTeambyName(team.getTeamName()));
-        return Response.ok().build();
-    }
+	@GET
+	@Path("/{teamName}")
+	public Response getUsersFromTeam(@PathParam("teamName") String teamName) {
+		List<User> result = teamService.getAllUsersInTeam(teamName);
+		return Response.ok()
+				.entity(result)
+				.build();
+	}
 
-    @POST
-    public Response createTeam(Team team){
-        return Response.ok(teamService.createOrUpdate(team)).build();
-    }
-    @GET
-    @Path("/{teamName}")
-    public Response getUsersFromTeam(@PathParam("teamName")String teamName){
-            Team team = teamService.getTeambyName(teamName);
-            return Response.ok(userService.findUsersByTeam(team)).build();
-    }
+	@PUT
+	@Path("/{teamName}")
+	public Response updateTeam(@PathParam("teamName") String teamName, Team team) {
+		teamService.updateTeam(teamName, team);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("/{teamname}")
+	public Response deleteTeam(@PathParam("teamname") String teamName) {
+		Team result = teamService.getTeambyName(teamName);
+		teamService.deleteTeam(result);
+		return Response.noContent()
+				.build();
+	}
 }
