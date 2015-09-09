@@ -20,10 +20,9 @@ import java.util.List;
 @Path("/teams")
 public class TeamResource
 {
-
 	@Inject
 	private TeamService teamService;
-	
+
 	@POST
 	public Response createTeam(@Context UriInfo uriInfo, Team team) {
 		Team result = teamService.createTeam(team);
