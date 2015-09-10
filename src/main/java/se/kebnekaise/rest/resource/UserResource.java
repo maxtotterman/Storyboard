@@ -1,5 +1,6 @@
 package se.kebnekaise.rest.resource;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.model.WorkItem;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 
 @Produces("application/json")
 @Consumes("application/json")
@@ -28,67 +30,72 @@ public final class UserResource
 	@POST
 	public Response createUser(@Context UriInfo uriInfo, User user) {
 		User result = service.createNewUser(user);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build();
-		return Response.created(uri)
-				.entity(result)
-				.build();
-	}
-
-	@GET
-	public Response findAllUsers() {
-		Iterable result = service.findAllUsers();
-		return Response.ok()
-				.entity(result)
-				.build();
+		if (result != null) {
+			URI uri = uriInfo.getAbsolutePathBuilder().path(result.getUsername()).build();
+			return Response.created(uri)
+					.entity(result)
+					.build();
+		}
+		throw new BadRequestException();
 	}
 
 	@GET
 	@Path("/{username}")
 	public Response findUser(@PathParam("username") String username) {
 		User user = service.findUserByUsername(username);
-		return Response.ok()
-				.entity(user)
-				.build();
+		if (user != null) {
+			return Response.ok()
+					.entity(user)
+					.build();
+		}
+		throw new NotFoundException("Could not find user");
 	}
 
 	@DELETE
 	@Path("/{username}")
 	public Response deleteUser(@PathParam("username") String username) {
-		/*
-		* Design request:
-		* service returns a User, so that we can return HTTP Code: 200 with the deleted user.
-		* */
 		User user = service.findUserByUsername(username);
-		service.deleteUser(user);
-		return Response.noContent()
-				.build();
+		if (user != null) {
+			service.deleteUser(user);
+			return Response.noContent()
+					.build();
+		}
+		throw new NotFoundException("Could not find user");
 	}
 
 	@PUT
 	@Path("/{username}")
 	public Response updateUser(@PathParam("username") String username, User user) {
-		//User result = service.updateUser(username, user);
-		return Response.ok(service.updateUser(username, user))
-				.build();
+		User result = service.updateUser(username, user);
+		if (result != null) {
+			return Response.ok()
+					.entity(result)
+					.build();
+		}
+		throw new BadRequestException("JSON malformed");
 	}
 
 	@GET
 	@Path("{username}/items")
-	public Response getAllWorkItems(@PathParam("username") String firstname) {
-		User user = service.findUserByUsername(firstname);
-		return Response.ok(workItemService.findByUser(user)).build();
+	public Response getAllWorkItemsForUser(@PathParam("username") String username) {
+		User user = service.findUserByUsername(username);
+		if (user != null) {
+			return Response.ok()
+					.entity(user.getWorkitems())
+					.build();
+		}
+		throw new NotFoundException("Could not find user");
 	}
 
 	@POST
 	@Path("/{username}/items/{workItem}")
 	public Response setWorkItem(@PathParam("username") String username, @PathParam("workItem") Long id) {
-		WorkItem workItem = workItemService.findById(id);
-		User user = service.findUserByUsername(username);
-		user.addWorkItem(workItem);
-		workItem.addUser(user);
-		workItemService.createOrUpdateWorkItem(workItem);
-		service.updateUser(user.getUsername(), user);
-
-		return Response.ok().build();
+		User result = service.addWorkItemToUser(username, id);
+		if (result != null) {
+			return Response.ok()
+					.entity(result.getWorkitems())
+					.build();
+		}
+		throw new NotFoundException("Could find user with id, or could not find item with id)");
 	}
 }
