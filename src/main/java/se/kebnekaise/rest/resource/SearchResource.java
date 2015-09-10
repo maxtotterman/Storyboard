@@ -1,8 +1,5 @@
 package se.kebnekaise.rest.resource;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.service.UserService;
 
 import javax.inject.Inject;
@@ -19,35 +16,33 @@ import javax.ws.rs.core.UriInfo;
 @Path("/search")
 public class SearchResource
 {
+	@Inject
+	private UserService service;
 
-    @Inject
-    private UserService service;
+	@GET
+	public Response getUsers(@Context UriInfo info) {
 
-    @GET
-    public Response getUsers(@Context UriInfo info) {
+		String firstname = info.getQueryParameters().getFirst("firstname");
+		String surname = info.getQueryParameters().getFirst("surname");
+		String username = info.getQueryParameters().getFirst("username");
+		String id = info.getQueryParameters().getFirst("id");
 
-        String firstname = info.getQueryParameters().getFirst("firstname");
-        String surname = info.getQueryParameters().getFirst("surname");
-        String username = info.getQueryParameters().getFirst("username");
-        String id = info.getQueryParameters().getFirst("id");
+		if (firstname != null) {
+			return Response.ok(service.findUserByFirstname(firstname)).build();
 
-        if(firstname != null){
-            return Response.ok(service.findUserByFirstname(firstname)).build();
+		}
+		if (surname != null) {
+			return Response.ok(service.findUserBySurname(surname)).build();
 
-        }
-        if(surname != null){
-            return Response.ok(service.findUserBySurname(surname)).build();
-
-        }
-        if(username != null){
-            return Response.ok(service.findUserByUsername(username)).build();
-        }
-        if(id != null){
-            return Response.ok(service.findUserByIdentity(id)).build();
-        }
-        else{
-            return Response.noContent().build();
-        }
-    }
-
+		}
+		if (username != null) {
+			return Response.ok(service.findUserByUsername(username)).build();
+		}
+		if (id != null) {
+			return Response.ok(service.findUserByIdentity(id)).build();
+		}
+		else {
+			return Response.noContent().build();
+		}
+	}
 }

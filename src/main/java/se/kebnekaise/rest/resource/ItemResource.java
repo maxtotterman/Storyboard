@@ -1,5 +1,7 @@
 package se.kebnekaise.rest.resource;
 
+import com.sun.tools.corba.se.idl.constExpr.Not;
+import org.hibernate.jdbc.Work;
 import org.springframework.web.bind.annotation.RequestBody;
 import se.kebnekaise.java.spring.model.Issue;
 import se.kebnekaise.java.spring.model.WorkItem;
@@ -22,21 +24,17 @@ public final class ItemResource
 	@Inject
 	private WorkItemService service;
 
-	@Inject
-	private IssueService issueService;
-
 	@POST
-	public Response createWorkItem(@Context UriInfo uriInfo, @RequestBody WorkItem work) {
+	public Response createWorkItem(@Context UriInfo uriInfo, WorkItem work) {
 		WorkItem result = service.createOrUpdateWorkItem(work);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
-		return Response.created(uri)
-				.entity(result)
-				.build();
+		if (result != null) {
+			URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
+			return Response.created(uri)
+					.entity(result)
+					.build();
+		}
+		throw new BadRequestException("Could not create item, malformed JSON");
 	}
-//	@POST
-//	public Response create(WorkItem work){
-//		return Response.ok(service.createOrUpdateWorkItem(work)).build();
-//	}
 
 	@GET
 	public Response searchItemByStatus(@Context UriInfo info) {
@@ -59,37 +57,47 @@ public final class ItemResource
 						.build();
 			}
 		}
-		throw new WebApplicationException(404);
+		throw new NotFoundException();
 	}
 
 	@DELETE
 	@Path("/{item}")
 	public Response deleteItem(@PathParam("item") Long id) {
-		WorkItem result = service.findById(id);
-		service.deleteWorkitem(id);
-		return Response.noContent()
-				.build();
+		WorkItem item = service.deleteWorkitem(id);
+		if (item != null) {
+			return Response.noContent()
+					.build();
+		}
+		throw new NotFoundException("Item was not found");
 	}
 
 	@PUT
 	@Path("/{item}/status")
 	public Response changeStatusForItem(@PathParam("item") Long id, WorkItem status) {
 		WorkItem result = service.updateStatusForWorkItem(id, status.getStatus());
-		return Response.ok()
-				.entity(result)
-				.build();
+		if (result != null) {
+			return Response.ok()
+					.entity(result)
+					.build();
+		}
+		throw new BadRequestException("Could not change status");
 	}
 
 	@GET
 	@Path("/issues")
-	public Response getItemWithIssue(){
+	public Response getItemWithIssue() {
 		return Response.ok(service.getAllWorkitemsWithAnIssue()).build();
 	}
 
 	@POST
 	@Path("/{item}/issues")
-	public Response addIssueToItem(@PathParam("item") Long id, Issue issue){
-		service.addIssueToWorkItem(id, issue);
-		return Response.ok().build();
+	public Response addIssueToItem(@PathParam("item") Long id, Issue issue) {
+		WorkItem result = service.addIssueToWorkItem(id, issue);
+		if (result != null) {
+			return Response.ok()
+					.entity(result)
+					.build();
+		}
+		throw new NotFoundException();
 	}
 }

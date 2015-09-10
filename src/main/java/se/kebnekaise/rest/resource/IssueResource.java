@@ -7,38 +7,43 @@ import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.service.IssueService;
 import se.kebnekaise.java.spring.service.WorkItemService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-@Component
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/issues")
-public class IssueResource {
+public class IssueResource
+{
 
-    @Autowired
-    IssueService service;
-    @Autowired
-    WorkItemService workItemService;
+	@Inject
+	IssueService service;
 
-    @POST
-    public Response createIssue(@Context UriInfo uriInfo, Issue issue){
-        Issue result = service.createNewIssue(issue);
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
-        return Response.created(uri)
-                .entity(result)
-                .build();
-    }
+	@Inject
+	WorkItemService workItemService;
 
-    @PUT
-    @Path("/{issue}")
-    public Response updateIssue(@PathParam("issue")Long id, Issue issue){
-        Issue result = service.updateIssue(id, issue);
-        return Response.ok()
-                .entity(result)
-                .build();
-    }
+	@POST
+	public Response createIssue(@Context UriInfo uriInfo, Issue issue) {
+		Issue result = service.createNewIssue(issue);
+		if (result != null) {
+			URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
+			return Response.created(uri)
+					.entity(result)
+					.build();
+		}
+		throw new BadRequestException("Could not create an issue");
+	}
+
+	@PUT
+	@Path("/{issue}")
+	public Response updateIssue(@PathParam("issue") Long id, Issue issue) {
+		Issue result = service.updateIssue(id, issue);
+		return Response.ok()
+				.entity(result)
+				.build();
+	}
 }
