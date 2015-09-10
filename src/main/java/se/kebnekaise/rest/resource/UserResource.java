@@ -79,11 +79,11 @@ public final class UserResource
 		return Response.ok(workItemService.findByUser(user)).build();
 	}
 
-	@PUT
-	@Path("/{firstname}/items/{workItem}")
-	public Response setWorkItem(@PathParam("firstname") String firstname, @PathParam("workItem") Long id) {
+	@POST
+	@Path("/{username}/items/{workItem}")
+	public Response setWorkItem(@PathParam("username") String username, @PathParam("workItem") Long id) {
 		WorkItem workItem = workItemService.findById(id);
-		User user = service.findUserByFirstname(firstname);
+		User user = service.findUserByUsername(username);
 		user.addWorkItem(workItem);
 		workItem.addUser(user);
 		workItemService.createOrUpdateWorkItem(workItem);

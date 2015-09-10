@@ -62,16 +62,13 @@ public class TeamResource
     public Response getWorkItemsForTeam(@PathParam("teamName")String teamName){
         Team team = teamService.getTeambyName(teamName);
         List<WorkItem> list = workItemService.findWorkItemByTeam(team);
-
         return Response.ok(workItemService.findWorkItemByTeam(team)).build();
     }
 
 	@POST
 	@Path("/{teamName}/users")
 	public Response addUserToTeam(@PathParam("teamName") String teamname, User user) {
-		System.out.println(user.getTeam());
 		User newUser = teamService.addUserToTeam(teamname, user);
-		System.out.println(newUser.getTeam());
 		return Response.ok()
 				.entity(newUser)
 				.build();

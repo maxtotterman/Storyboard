@@ -28,6 +28,7 @@ public class ApiResource {
         String firstname = info.getQueryParameters().getFirst("firstname");
         String surname = info.getQueryParameters().getFirst("surname");
         String username = info.getQueryParameters().getFirst("username");
+        String id = info.getQueryParameters().getFirst("id");
 
         if(firstname != null){
             return Response.ok(service.findUserByFirstname(firstname)).build();
@@ -40,11 +41,12 @@ public class ApiResource {
         if(username != null){
             return Response.ok(service.findUserByUsername(username)).build();
         }
+        if(id != null){
+            return Response.ok(service.findUserByIdentity(id)).build();
+        }
         else{
             return Response.noContent().build();
         }
-
-
     }
 
 }

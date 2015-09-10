@@ -83,7 +83,7 @@ public final class ItemResource
 	@GET
 	@Path("/issues")
 	public Response getItemWithIssue(){
-		return Response.ok(issueService.findAllIssuesWithWorkItem()).build();
+		return Response.ok(service.getAllWorkitemsWithAnIssue()).build();
 	}
 
 	@POST
