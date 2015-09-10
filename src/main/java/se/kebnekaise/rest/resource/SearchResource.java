@@ -17,7 +17,8 @@ import javax.ws.rs.core.UriInfo;
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/search")
-public class ApiResource {
+public class SearchResource
+{
 
     @Inject
     private UserService service;
