@@ -70,9 +70,8 @@ public final class UserResource
 	@PUT
 	@Path("/{username}")
 	public Response updateUser(@PathParam("username") String username, User user) {
-		User result = service.updateUser(username, user);
-		return Response.ok()
-				.entity(result)
+		//User result = service.updateUser(username, user);
+		return Response.ok(service.updateUser(username, user))
 				.build();
 	}
 
