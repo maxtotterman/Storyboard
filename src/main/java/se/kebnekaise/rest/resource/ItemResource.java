@@ -1,5 +1,6 @@
 package se.kebnekaise.rest.resource;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import se.kebnekaise.java.spring.model.Issue;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.IssueService;
@@ -25,13 +26,17 @@ public final class ItemResource
 	private IssueService issueService;
 
 	@POST
-	public Response createWorkItem(@Context UriInfo uriInfo, final WorkItem work) {
+	public Response createWorkItem(@Context UriInfo uriInfo, @RequestBody WorkItem work) {
 		WorkItem result = service.createOrUpdateWorkItem(work);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
 		return Response.created(uri)
 				.entity(result)
 				.build();
 	}
+//	@POST
+//	public Response create(WorkItem work){
+//		return Response.ok(service.createOrUpdateWorkItem(work)).build();
+//	}
 
 	@GET
 	public Response searchItemByStatus(@Context UriInfo info) {

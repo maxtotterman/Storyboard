@@ -1,6 +1,8 @@
 package se.kebnekaise.rest.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
