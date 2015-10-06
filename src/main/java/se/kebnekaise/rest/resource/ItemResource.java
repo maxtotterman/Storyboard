@@ -100,5 +100,15 @@ public final class ItemResource
 		}
 		throw new NotFoundException();
 	}
+	@POST
+	@Path("/{teamName}/items")
+	public Response addItemToTeam(@PathParam("teamName")String teamName, WorkItem workItem){
+		WorkItem result = service.addWorkitemToTeam(teamName, workItem);
+		if(result != null){
+			return Response.ok().entity(result).build();
+		}
+		throw new NotFoundException();
+	}
+
 
 }
