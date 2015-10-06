@@ -1,12 +1,9 @@
 package se.kebnekaise.rest.resource;
 
-import com.sun.tools.corba.se.idl.constExpr.Not;
-import org.hibernate.jdbc.Work;
-import org.springframework.web.bind.annotation.RequestBody;
 import se.kebnekaise.java.spring.model.Issue;
 import se.kebnekaise.java.spring.model.WorkItem;
-import se.kebnekaise.java.spring.service.IssueService;
 import se.kebnekaise.java.spring.service.WorkItemService;
+
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -56,6 +53,8 @@ public final class ItemResource
 						.entity(result)
 						.build();
 			}
+		}else{
+			return Response.ok(service.findAll()).build();
 		}
 		throw new NotFoundException();
 	}
@@ -93,6 +92,7 @@ public final class ItemResource
 	@Path("/{item}/issues")
 	public Response addIssueToItem(@PathParam("item") Long id, Issue issue) {
 		WorkItem result = service.addIssueToWorkItem(id, issue);
+
 		if (result != null) {
 			return Response.ok()
 					.entity(result)
@@ -100,4 +100,5 @@ public final class ItemResource
 		}
 		throw new NotFoundException();
 	}
+
 }

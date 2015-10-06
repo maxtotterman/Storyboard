@@ -1,10 +1,6 @@
 package se.kebnekaise.rest.resource;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
-import se.kebnekaise.java.spring.model.WorkItem;
-import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.UserService;
 import se.kebnekaise.java.spring.service.WorkItemService;
 
@@ -14,7 +10,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.List;
 
 @Produces("application/json")
 @Consumes("application/json")
@@ -98,4 +93,5 @@ public final class UserResource
 		}
 		throw new NotFoundException("Could find user with id, or could not find item with id)");
 	}
+
 }
