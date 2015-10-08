@@ -65,6 +65,21 @@ public class TeamResource
         return Response.ok(workItemService.findWorkItemByTeam(team)).build();
     }
 
+	@POST
+	@Path("/{teamName}/items")
+	public Response createWorkitemForTeam(@Context UriInfo uriInfo, @PathParam("teamName")String teamName, WorkItem item){
+		WorkItem result = workItemService.createOrUpdateWorkItem(item);
+		if (result != null) {
+			result = workItemService.addWorkitemToTeam(teamName, result);
+			URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(result.getId())).build();
+			return Response.created(uri)
+					.entity(result)
+					.build();
+		}
+		throw new BadRequestException("Could not create item, malformed JSON");
+	}
+
+
 	@PUT
 	@Path("/{teamName}/items/{itemId}")
 	public Response updateItem(@PathParam("teamName")String teamName, @PathParam("itemId") Long id, WorkItem itemToUpdate){
@@ -86,7 +101,7 @@ public class TeamResource
 				.entity(newUser)
 				.build();
 	}
-	
+
 	@GET
 	@Path("/{teamName}/users")
 	public Response getUsersFromTeam(@PathParam("teamName") String teamName) {
