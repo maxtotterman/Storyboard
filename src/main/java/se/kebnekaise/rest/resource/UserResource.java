@@ -4,6 +4,7 @@ import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.service.UserService;
 import se.kebnekaise.java.spring.service.WorkItemService;
 
+import javax.annotation.security.DeclareRoles;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+@DeclareRoles({"root", "User"})
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/users")

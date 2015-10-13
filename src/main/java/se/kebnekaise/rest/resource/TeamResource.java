@@ -1,6 +1,5 @@
 package se.kebnekaise.rest.resource;
 
-import se.kebnekaise.java.spring.model.AuthAccessElement;
 import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.model.WorkItem;
@@ -19,7 +18,7 @@ import java.util.List;
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/teams")
-public class TeamResource extends AbstractResource
+public class TeamResource
 {
 	@Inject
 	private TeamService teamService;
@@ -38,10 +37,6 @@ public class TeamResource extends AbstractResource
 
 	@GET
 	public Response getAllTeams(@Context HttpHeaders headers) {
-		if (!checkAuth ("root",headers)) {
-			return Response.status(403).type("text/plain").entity("Geen toegang!!").build();
-		}
-		long userId = Long.parseLong(headers.getHeaderString(AuthAccessElement.PARAM_AUTH_ID));
 		Iterable result = teamService.getAllTeams();
 			return Response.ok()
 					.entity(result)
