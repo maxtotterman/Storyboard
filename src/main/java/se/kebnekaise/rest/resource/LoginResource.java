@@ -32,7 +32,7 @@ public final class LoginResource
 		}
 
 		try {
-			if(authenticate(username, password)) {
+			if (authenticate(username, password)) {
 				Token token = issueToken(username);
 				return Response.ok(token).build();
 			}
@@ -44,7 +44,6 @@ public final class LoginResource
 	}
 
 	private boolean authenticate(String username, String password) throws Exception {
-		System.out.println("LoginResource.authenticate" + bean.authLogin(username,password));
 		return bean.authLogin(username, password);
 	}
 
@@ -53,4 +52,3 @@ public final class LoginResource
 		return token;
 	}
 }
-

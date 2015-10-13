@@ -22,4 +22,16 @@
         <servlet-name>JAX-RS-Application</servlet-name>
         <url-pattern>/v1/*</url-pattern>
     </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected Context</web-resource-name>
+            <url-pattern>/v1/*</url-pattern>
+        </web-resource-collection>
+        <!-- auth-constraint goes here if you requre authentication -->
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
 </web-app>
