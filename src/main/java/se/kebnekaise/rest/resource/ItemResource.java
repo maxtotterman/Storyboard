@@ -3,7 +3,7 @@ package se.kebnekaise.rest.resource;
 import se.kebnekaise.java.spring.model.Issue;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.WorkItemService;
-
+import se.kebnekaise.rest.annotation.Secured;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
+@Secured
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/items")
@@ -109,6 +110,4 @@ public final class ItemResource
 		}
 		throw new NotFoundException();
 	}
-
-
 }

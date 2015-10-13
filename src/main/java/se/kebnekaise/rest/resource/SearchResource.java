@@ -1,6 +1,7 @@
 package se.kebnekaise.rest.resource;
 
 import se.kebnekaise.java.spring.service.UserService;
+import se.kebnekaise.rest.annotation.Secured;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+@Secured
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/search")
