@@ -5,6 +5,7 @@ import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.WorkItemService;
+import se.kebnekaise.rest.annotation.Secured;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -35,6 +36,7 @@ public class TeamResource
 	}
 
 	@GET
+	@Secured
 	public Response getAllTeams() {
 		Iterable result = teamService.getAllTeams();
 		return Response.ok()

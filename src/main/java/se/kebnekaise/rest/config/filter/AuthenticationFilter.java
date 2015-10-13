@@ -1,7 +1,11 @@
 package se.kebnekaise.rest.config.filter;
 
 
+import se.kebnekaise.java.spring.service.AuthBean;
+import se.kebnekaise.rest.annotation.Secured;
+
 import javax.annotation.Priority;
+import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -11,10 +15,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
+@Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter
 {
+	@Inject
+	AuthBean bean;
+
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 
@@ -31,10 +39,8 @@ public class AuthenticationFilter implements ContainerRequestFilter
 		String token = authorizationHeader.substring("Bearer".length()).trim();
 
 		try {
-
 			// Validate the token
 			validateToken(token);
-
 		}
 		catch (Exception e) {
 			requestContext.abortWith(
@@ -44,6 +50,6 @@ public class AuthenticationFilter implements ContainerRequestFilter
 
 	private void validateToken(String token) throws Exception {
 		// Check if it was issued by the server and if it's not expired
-		// Throw an Exception if the token is invalid
+		bean.checkToken(token);
 	}
 }
