@@ -1,5 +1,6 @@
 package se.kebnekaise.rest.resource;
 
+import se.kebnekaise.java.spring.model.AuthAccessElement;
 import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.model.WorkItem;
@@ -9,6 +10,7 @@ import se.kebnekaise.java.spring.service.WorkItemService;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -17,7 +19,7 @@ import java.util.List;
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/teams")
-public class TeamResource
+public class TeamResource extends AbstractResource
 {
 	@Inject
 	private TeamService teamService;
@@ -35,11 +37,17 @@ public class TeamResource
 	}
 
 	@GET
-	public Response getAllTeams() {
+	public Response getAllTeams(@Context HttpHeaders headers) {
+		if (!checkAuth ("root",headers)) {
+			return Response.status(403).type("text/plain").entity("Geen toegang!!").build();
+		}
+		long userId = Long.parseLong(headers.getHeaderString(AuthAccessElement.PARAM_AUTH_ID));
 		Iterable result = teamService.getAllTeams();
-		return Response.ok()
-				.entity(result)
-				.build();
+			return Response.ok()
+					.entity(result)
+					.build();
+
+
 	}
 
 	@PUT
@@ -52,9 +60,9 @@ public class TeamResource
 	@DELETE
 	@Path("/{teamname}")
 	public Response deleteTeam(@PathParam("teamname") String teamName) {
-		Team result = teamService.getTeambyName(teamName);
+			Team result = teamService.getTeambyName(teamName);
 		teamService.deleteTeam(result);
-		return Response.noContent()
+			return Response.noContent()
 				.build();
 	}
     @GET
@@ -62,7 +70,7 @@ public class TeamResource
     public Response getWorkItemsForTeam(@PathParam("teamName")String teamName){
         Team team = teamService.getTeambyName(teamName);
         List<WorkItem> list = workItemService.findWorkItemByTeam(team);
-        return Response.ok(workItemService.findWorkItemByTeam(team)).build();
+			return Response.ok(workItemService.findWorkItemByTeam(team)).build();
     }
 
 	@POST
@@ -84,7 +92,7 @@ public class TeamResource
 	@Path("/{teamName}/items/{itemId}")
 	public Response updateItem(@PathParam("teamName")String teamName, @PathParam("itemId") Long id, WorkItem itemToUpdate){
 		Team team = teamService.getTeambyName(teamName);
-		WorkItem item = workItemService.findById(id);
+			WorkItem item = workItemService.findById(id);
 		if (team != null && item != null){
 			workItemService.updateWorkItem(id, itemToUpdate);
 			return Response.ok(itemToUpdate).build();
@@ -96,7 +104,7 @@ public class TeamResource
 	@POST
 	@Path("/{teamName}/users")
 	public Response addUserToTeam(@PathParam("teamName") String teamname, User user) {
-		User newUser = teamService.addUserToTeam(teamname, user);
+			User newUser = teamService.addUserToTeam(teamname, user);
 		return Response.ok()
 				.entity(newUser)
 				.build();

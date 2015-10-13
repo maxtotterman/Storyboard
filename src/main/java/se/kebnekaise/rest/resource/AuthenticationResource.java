@@ -7,6 +7,7 @@ import se.kebnekaise.java.spring.service.AuthServiceBean;
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,7 +24,7 @@ public class AuthenticationResource {
 
     @POST
     @PermitAll
-    public AuthAccessElement login(@Context HttpServletRequest request, AuthLoginElement loginElement) {
+    public AuthAccessElement login(@Context HttpServletRequest request, AuthLoginElement loginElement,HttpServletResponse resp) {
         AuthAccessElement accessElement = authService.login(loginElement);
         if (accessElement != null) {
             request.getSession().setAttribute(AuthAccessElement.PARAM_AUTH_ID, accessElement.getAuthId());
