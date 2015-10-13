@@ -1,4 +1,4 @@
-package se.kebnekaise.rest.config;
+package se.kebnekaise.rest.config.filter;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

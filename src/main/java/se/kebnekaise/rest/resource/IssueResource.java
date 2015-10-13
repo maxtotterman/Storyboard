@@ -1,11 +1,9 @@
 package se.kebnekaise.rest.resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.kebnekaise.java.spring.model.Issue;
-import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.service.IssueService;
 import se.kebnekaise.java.spring.service.WorkItemService;
+import se.kebnekaise.rest.annotation.Secured;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -14,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+@Secured
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/issues")

@@ -5,16 +5,17 @@ import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.TeamService;
 import se.kebnekaise.java.spring.service.WorkItemService;
+import se.kebnekaise.rest.annotation.Secured;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
+@Secured
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/teams")
@@ -36,13 +37,11 @@ public class TeamResource
 	}
 
 	@GET
-	public Response getAllTeams(@Context HttpHeaders headers) {
+	public Response getAllTeams() {
 		Iterable result = teamService.getAllTeams();
 			return Response.ok()
 					.entity(result)
 					.build();
-
-
 	}
 
 	@PUT
