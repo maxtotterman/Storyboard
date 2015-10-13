@@ -11,6 +11,4 @@ public class JerseyConfiguration extends ResourceConfig
 				.register(JacksonConfiguration.class)
 				.register(JacksonFeature.class);
 	}
-
-
 }

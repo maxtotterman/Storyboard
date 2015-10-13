@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-@Secured
+
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/users")
@@ -20,9 +20,6 @@ public final class UserResource
 {
 	@Inject
 	private UserService service;
-
-	@Inject
-	WorkItemService workItemService;
 
 	@POST
 	public Response createUser(@Context UriInfo uriInfo, User user) {
@@ -36,6 +33,7 @@ public final class UserResource
 		throw new BadRequestException();
 	}
 
+	@Secured
 	@GET
 	@Path("/{username}")
 	public Response findUser(@PathParam("username") String username) {
@@ -48,6 +46,7 @@ public final class UserResource
 		throw new NotFoundException("Could not find user");
 	}
 
+	@Secured
 	@DELETE
 	@Path("/{username}")
 	public Response deleteUser(@PathParam("username") String username) {
@@ -60,6 +59,7 @@ public final class UserResource
 		throw new NotFoundException("Could not find user");
 	}
 
+	@Secured
 	@PUT
 	@Path("/{username}")
 	public Response updateUser(@PathParam("username") String username, User user) {
@@ -72,6 +72,7 @@ public final class UserResource
 		throw new BadRequestException("JSON malformed");
 	}
 
+	@Secured
 	@GET
 	@Path("{username}/items")
 	public Response getAllWorkItemsForUser(@PathParam("username") String username) {
@@ -84,6 +85,7 @@ public final class UserResource
 		throw new NotFoundException("Could not find user");
 	}
 
+	@Secured
 	@POST
 	@Path("/{username}/items/{workItem}")
 	public Response setWorkItem(@PathParam("username") String username, @PathParam("workItem") Long id) {
@@ -95,5 +97,4 @@ public final class UserResource
 		}
 		throw new NotFoundException("Could find user with id, or could not find item with id)");
 	}
-
 }

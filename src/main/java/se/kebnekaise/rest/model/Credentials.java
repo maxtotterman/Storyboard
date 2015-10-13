@@ -11,7 +11,8 @@ public class Credentials implements Serializable
 		this.username = username;
 		this.password = password;
 	}
-	protected Credentials(){}
+
+	protected Credentials (){}
 
 	public String getUsername() {
 		return username;
