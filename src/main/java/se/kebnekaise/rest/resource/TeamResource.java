@@ -42,8 +42,6 @@ public class TeamResource
 			return Response.ok()
 					.entity(result)
 					.build();
-
-
 	}
 
 	@PUT

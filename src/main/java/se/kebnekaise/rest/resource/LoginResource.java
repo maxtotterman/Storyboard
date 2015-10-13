@@ -5,8 +5,10 @@ import se.kebnekaise.rest.model.Credentials;
 import se.kebnekaise.rest.model.Token;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Application;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Path("/login")
@@ -30,17 +32,20 @@ public final class LoginResource
 		}
 
 		try {
-			authenticate(username, password);
-			Token token = issueToken(username);
-			return Response.ok(token).build();
+			if(authenticate(username, password)) {
+				Token token = issueToken(username);
+				return Response.ok(token).build();
+			}
 		}
 		catch (Exception e) {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
+		return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 
-	private void authenticate(String username, String password) throws Exception {
-		bean.authLogin(username, password);
+	private boolean authenticate(String username, String password) throws Exception {
+		System.out.println("LoginResource.authenticate" + bean.authLogin(username,password));
+		return bean.authLogin(username, password);
 	}
 
 	private Token issueToken(String username) {

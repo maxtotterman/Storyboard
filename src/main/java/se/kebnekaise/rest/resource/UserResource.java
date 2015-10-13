@@ -5,6 +5,7 @@ import se.kebnekaise.java.spring.service.UserService;
 import se.kebnekaise.java.spring.service.WorkItemService;
 import se.kebnekaise.rest.annotation.Secured;
 
+import javax.annotation.security.DeclareRoles;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
