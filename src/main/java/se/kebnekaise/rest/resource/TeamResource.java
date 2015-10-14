@@ -4,6 +4,7 @@ import se.kebnekaise.java.spring.model.Team;
 import se.kebnekaise.java.spring.model.User;
 import se.kebnekaise.java.spring.model.WorkItem;
 import se.kebnekaise.java.spring.service.TeamService;
+import se.kebnekaise.java.spring.service.UserService;
 import se.kebnekaise.java.spring.service.WorkItemService;
 import se.kebnekaise.rest.annotation.Secured;
 
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
@@ -21,11 +23,17 @@ import java.util.List;
 @Path("/teams")
 public class TeamResource
 {
+	@Context
+	private SecurityContext securityContext;
+
 	@Inject
 	private TeamService teamService;
 
-    @Inject
-    private WorkItemService workItemService;
+	@Inject
+	private UserService userService;
+
+	@Inject
+	private WorkItemService workItemService;
 
 	@POST
 	public Response createTeam(@Context UriInfo uriInfo, Team team) {
@@ -39,9 +47,9 @@ public class TeamResource
 	@GET
 	public Response getAllTeams() {
 		Iterable result = teamService.getAllTeams();
-			return Response.ok()
-					.entity(result)
-					.build();
+		return Response.ok()
+				.entity(result)
+				.build();
 	}
 
 	@PUT
@@ -54,22 +62,27 @@ public class TeamResource
 	@DELETE
 	@Path("/{teamname}")
 	public Response deleteTeam(@PathParam("teamname") String teamName) {
-			Team result = teamService.getTeambyName(teamName);
+		Team result = teamService.getTeambyName(teamName);
 		teamService.deleteTeam(result);
-			return Response.noContent()
+		return Response.noContent()
 				.build();
 	}
-    @GET
-    @Path("/{teamName}/items")
-    public Response getWorkItemsForTeam(@PathParam("teamName")String teamName){
-        Team team = teamService.getTeambyName(teamName);
-        List<WorkItem> list = workItemService.findWorkItemByTeam(team);
+
+	@GET
+	@Path("/{teamName}/items")
+	public Response getWorkItemsForTeam(@PathParam("teamName") String teamName) {
+		boolean userVerified = userService.findUserByToken(securityContext.getUserPrincipal().getName(), teamName);
+		if (userVerified) {
+			Team team = teamService.getTeambyName(teamName);
+			List<WorkItem> list = workItemService.findWorkItemByTeam(team);
 			return Response.ok(workItemService.findWorkItemByTeam(team)).build();
-    }
+		}
+		return Response.status(Response.Status.FORBIDDEN).build();
+	}
 
 	@POST
 	@Path("/{teamName}/items")
-	public Response createWorkitemForTeam(@Context UriInfo uriInfo, @PathParam("teamName")String teamName, WorkItem item){
+	public Response createWorkitemForTeam(@Context UriInfo uriInfo, @PathParam("teamName") String teamName, WorkItem item) {
 		WorkItem result = workItemService.createOrUpdateWorkItem(item);
 		if (result != null) {
 			result = workItemService.addWorkitemToTeam(teamName, result);
@@ -81,24 +94,22 @@ public class TeamResource
 		throw new BadRequestException("Could not create item, malformed JSON");
 	}
 
-
 	@PUT
 	@Path("/{teamName}/items/{itemId}")
-	public Response updateItem(@PathParam("teamName")String teamName, @PathParam("itemId") Long id, WorkItem itemToUpdate){
+	public Response updateItem(@PathParam("teamName") String teamName, @PathParam("itemId") Long id, WorkItem itemToUpdate) {
 		Team team = teamService.getTeambyName(teamName);
-			WorkItem item = workItemService.findById(id);
-		if (team != null && item != null){
+		WorkItem item = workItemService.findById(id);
+		if (team != null && item != null) {
 			workItemService.updateWorkItem(id, itemToUpdate);
 			return Response.ok(itemToUpdate).build();
 		}
 		throw new BadRequestException("Could not create item, malformed JSON");
 	}
 
-
 	@POST
 	@Path("/{teamName}/users")
 	public Response addUserToTeam(@PathParam("teamName") String teamname, User user) {
-			User newUser = teamService.addUserToTeam(teamname, user);
+		User newUser = teamService.addUserToTeam(teamname, user);
 		return Response.ok()
 				.entity(newUser)
 				.build();
